@@ -1,1 +1,9 @@
 dummy-files/random-files/
+
+file-manager-server/uploads/
+file-manager-server/node_modules/
+file-manager-server/package-lock.json
+
+file-manager-client/node_modules/
+node_modules/package-lock.json
+
