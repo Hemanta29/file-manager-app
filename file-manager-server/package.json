@@ -10,5 +10,10 @@
   "keywords": [],
   "author": "Hemanta Dutta",
   "license": "ISC",
-  "description": "This is a Node.js application that provides a server-side file search functionality."
+  "description": "This is a Node.js application that provides a server-side file search functionality.",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "multer": "^2.0.2"
+  }
 }
