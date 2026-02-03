@@ -22,7 +22,14 @@ app.post("/upload", (req, res, next) => {
   upload(req, res, (err) => {
     if (err) {
       if (err instanceof multer.MulterError) {
-        if (err.code === "LIMIT_FILE_COUNT") {
+        if (
+          err.code === "LIMIT_FILE_COUNT" ||
+          err.code === "LIMIT_UNEXPECTED_FILE" ||
+          err.code === "LIMIT_PART_COUNT" ||
+          err.code === "LIMIT_FIELD_KEY" ||
+          err.code === "LIMIT_FIELD_VALUE" ||
+          err.code === "LIMIT_FIELD_COUNT"
+        ) {
           return next(
             new errorHandler(
               `You are trying to upload too many files. Maximum allowed is 10 files`,
@@ -60,9 +67,7 @@ app.post("/upload", (req, res, next) => {
 app.get("/search", (req, res, next) => {
   const key = req.query.key;
   if (!key) {
-    return next(
-        new errorHandler("Please provide a search key", 400)
-    )
+    return next(new errorHandler("Please provide a search key", 400));
   }
   const result = tree.search(key);
   if (result) {
@@ -80,27 +85,27 @@ app.get("/search", (req, res, next) => {
   }
 });
 
-app.get("/viewTree", (req, res, next)=>{
-    res.json({
-        success: true,
-        message: "Tree fetched successfully",
-        data: tree.toJSON()
-    })
-})
+app.get("/viewTree", (req, res, next) => {
+  res.json({
+    success: true,
+    message: "Tree fetched successfully",
+    data: tree.toJSON(),
+  });
+});
 
-app.use((err, req, res, next)=>{
-    const statusCode = err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
 
-    const errorResponse = {
-        success: false,
-        message,
-        status: statusCode,
-        stack: process.env.NODE_ENV ==="development" ? err.stack : undefined
-    }
+  const errorResponse = {
+    success: false,
+    message,
+    status: statusCode,
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+  };
 
-    res.status(statusCode).json(errorResponse);
-})
+  res.status(statusCode).json(errorResponse);
+});
 
 app.listen(port, () => {
   console.log(`File Manager Server is listening at http://localhost:${port}`);
